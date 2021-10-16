@@ -59,7 +59,7 @@ func get_import_options(preset):
 #            "default_value": 0
 #        },
 #        {
-#            "name": "counts",
+#            "name": "frame_counts",
 #            "type": TYPE_INT,
 #            "default_value": 0
 #        },
@@ -91,11 +91,11 @@ func import(source_file, save_path, options, platform_v, r_gen_files):
     for sheet_name in config.get_sections():
         var cols = config.get_value(sheet_name,"cols")
         var rows = config.get_value(sheet_name,"rows")
-        var counts = config.get_value(sheet_name,"counts")
+        var frame_counts = config.get_value(sheet_name,"frame_counts")
         var animation_names = config.get_value(sheet_name,"animation_names")
-        var sheet_option = {"cols":cols,"rows":rows,"counts":counts,"animation_names":animation_names}
+        var sheet_option = {"cols":cols,"rows":rows,"frame_counts":frame_counts,"animation_names":animation_names}
         add_anim(source_file, save_path, sheet_option, sheet_name, _sp_frames)
-        print("[SpritesheetToSpriteFrames] cols:%s, rows:%s, counts:%s, animation_names:%s" % [cols, rows, counts, animation_names ])
+        print("[SpritesheetToSpriteFrames] cols:%s, rows:%s, frame_counts:%s, animation_names:%s" % [cols, rows, frame_counts, animation_names ])
     print('[SpritesheetToSpriteFrames] %s imported.' % [source_file])
     return ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], _sp_frames)
 
@@ -104,23 +104,23 @@ func add_anim(source_file, save_path, options, img_name, _sp_frames):
     var texture = load(dir + '/' + img_name + '.png')
     var cols:int = options.cols as int
     var rows:int = options.rows as int
-    var counts:int = options.counts as int
+    var frame_counts:int = options.frame_counts as int
     for col in range(0, cols):
         for row in range(0, rows):
             var name = options.animation_names[(col * rows) + row]
             if name == "":
                 continue
             _sp_frames.add_animation(name)
-            for i in range(0,counts):
+            for i in range(0,frame_counts):
                 var atlas = create_atlas(texture, options, row, col, i)
                 _sp_frames.add_frame(name, atlas, i)
 
 func create_atlas(texture:StreamTexture, options, row, col, index) -> AtlasTexture :
     var image : Image = texture.get_data()
-    var tile_width = image.get_width() / options.cols / options.counts
+    var tile_width = image.get_width() / options.cols / options.frame_counts
     var tile_height = image.get_height() / options.rows
     var atlas = AtlasTexture.new()
-    var rect = Rect2((tile_width * col * options.counts) + (tile_width * index), tile_height * row, tile_width, tile_height)
+    var rect = Rect2((tile_width * col * options.frame_counts) + (tile_width * index), tile_height * row, tile_width, tile_height)
     atlas.atlas = texture
     atlas.region = rect
     atlas.flags = 4
