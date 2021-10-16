@@ -1,0 +1,11 @@
+[icon]
+rows=2
+cols=1
+counts=2
+animation_names=[ "blue_up", "blue_down" ]
+
+[icon_2]
+rows=2
+cols=1
+counts=4
+animation_names=[ "green_mouse", "green_eye" ]
