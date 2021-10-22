@@ -1,0 +1,6 @@
+[bloodhit]
+rows=5
+cols=1
+frame_counts=5
+animation_names=[ "bloodhit","bloodhit","bloodhit","bloodhit",""]
+frame_enable_counts=[ null,null,null,2,null]

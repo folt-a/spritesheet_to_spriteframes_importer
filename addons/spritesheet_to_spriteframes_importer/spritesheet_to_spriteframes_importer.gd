@@ -93,7 +93,10 @@ func import(source_file, save_path, options, platform_v, r_gen_files):
         var rows = config.get_value(sheet_name,"rows")
         var frame_counts = config.get_value(sheet_name,"frame_counts")
         var animation_names = config.get_value(sheet_name,"animation_names")
-        var sheet_option = {"cols":cols,"rows":rows,"frame_counts":frame_counts,"animation_names":animation_names}
+        var frame_enable_counts = null
+        if config.has_section_key(sheet_name,"frame_enable_counts"):
+            frame_enable_counts = config.get_value(sheet_name,"frame_enable_counts")
+        var sheet_option = {"cols":cols,"rows":rows,"frame_counts":frame_counts,"animation_names":animation_names,"frame_enable_counts":frame_enable_counts}
         add_anim(source_file, save_path, sheet_option, sheet_name, _sp_frames)
         print("[SpritesheetToSpriteFrames] cols:%s, rows:%s, frame_counts:%s, animation_names:%s" % [cols, rows, frame_counts, animation_names ])
     print('[SpritesheetToSpriteFrames] %s imported.' % [source_file])
@@ -105,15 +108,21 @@ func add_anim(source_file, save_path, options, img_name, _sp_frames):
     var cols:int = options.cols as int
     var rows:int = options.rows as int
     var frame_counts:int = options.frame_counts as int
+
     for col in range(0, cols):
         for row in range(0, rows):
             var name = options.animation_names[(col * rows) + row]
+            var frame_enable_counts = null
+            if options.frame_enable_counts != null:
+                frame_enable_counts = options.frame_enable_counts[(col * rows) + row]
             if name == "":
                 continue
-            _sp_frames.add_animation(name)
+            if !_sp_frames.has_animation(name):
+                _sp_frames.add_animation(name)
             for i in range(0,frame_counts):
-                var atlas = create_atlas(texture, options, row, col, i)
-                _sp_frames.add_frame(name, atlas, i)
+                if frame_enable_counts == null or frame_enable_counts > i:
+                    var atlas = create_atlas(texture, options, row, col, i)
+                    _sp_frames.add_frame(name, atlas, -1)
 
 func create_atlas(texture:StreamTexture, options, row, col, index) -> AtlasTexture :
     var image : Image = texture.get_data()
