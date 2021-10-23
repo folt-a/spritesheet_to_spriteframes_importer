@@ -2,5 +2,13 @@
 rows=5
 cols=1
 frame_counts=5
-animation_names=[ "bloodhit","bloodhit","bloodhit","bloodhit",""]
-frame_enable_counts=[ null,null,null,2,null]
+speed=30
+animation_names=[ "bloodhit1","bloodhit1","bloodhit1","bloodhit1","bloodhit2"]
+
+[bloodhit\bloodhit1]
+frame_enable_counts=17
+
+[bloodhit\bloodhit2]
+frame_enable_counts=3
+speed=10
+loop=false
